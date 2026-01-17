@@ -1,11 +1,11 @@
 ﻿//#if INFORMIX
-using IBM.Data.DB2.Core;
 using Respawn;
 using Shouldly;
 using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using IBM.Data.Db2;
 using NPoco;
 using Respawn.Graph;
 using Xunit;

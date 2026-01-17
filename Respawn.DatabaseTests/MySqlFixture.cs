@@ -23,11 +23,17 @@ public class MySqlFixture(IMessageSink messageSink) : DbContainerFixture<MySqlBu
             $"""
               DROP DATABASE IF EXISTS `{dbName}`;
               CREATE DATABASE `{dbName}`;
+              -- CREATE USER IF NOT EXISTS '{MySqlBuilder.DefaultUsername}'@'%' IDENTIFIED BY '{MySqlBuilder.DefaultPassword}';
+              -- GRANT ALL PRIVILEGES ON `{dbName}`.* TO '{MySqlBuilder.DefaultUsername}'@'%';
               """;
         using var command = CreateCommand(script);
         command.ExecuteNonQuery();
 
-        var connectionString = new MySqlConnectionStringBuilder(ConnectionString) { Database = dbName }.ConnectionString;
+        var connectionString = new MySqlConnectionStringBuilder(ConnectionString)
+        {
+            // UserID = MySqlBuilder.DefaultUsername,
+            Database = dbName
+        }.ConnectionString;
         var database = new Database(connectionString, DatabaseType.MySQL, DbProviderFactory);
         database.OpenSharedConnection();
         return database;

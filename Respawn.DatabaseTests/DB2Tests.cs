@@ -1,7 +1,7 @@
-﻿using IBM.Data.DB2.Core;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using System.Threading.Tasks;
+using IBM.Data.Db2;
 using NPoco;
 using Respawn.Graph;
 using Xunit;
