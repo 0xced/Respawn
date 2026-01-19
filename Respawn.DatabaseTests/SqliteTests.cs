@@ -53,6 +53,14 @@ namespace Respawn.DatabaseTests
         }
 
         [Fact]
+        public async Task ShouldThrowWhenDatabaseEmpty()
+        {
+            var exception = await Should.ThrowAsync<InvalidOperationException>(Respawner.CreateAsync(_connection));
+
+            exception.Message.ShouldContain("No tables found");
+        }
+
+        [Fact]
         public async Task ShouldDeleteData()
         {
             await _database.ExecuteAsync("CREATE TABLE foo (value INTEGER)");

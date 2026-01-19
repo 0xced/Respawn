@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Respawn.Graph;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,6 +10,16 @@ namespace Respawn.DatabaseTests
 
     public class PostgresTests(ITestOutputHelper output, PostgresFixture fixture) : IClassFixture<PostgresFixture>
     {
+        [Fact]
+        public async Task ShouldThrowWhenDatabaseEmpty()
+        {
+            using var db = await fixture.CreateDatabaseAsync();
+
+            var exception = await Should.ThrowAsync<InvalidOperationException>(Respawner.CreateAsync(db.Connection));
+
+            exception.Message.ShouldContain("No tables found");
+        }
+
         [Fact]
         public async Task ShouldDeleteData()
         {

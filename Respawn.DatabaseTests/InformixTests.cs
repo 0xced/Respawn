@@ -27,6 +27,14 @@ namespace Respawn.DatabaseTests
         public async Task DisposeAsync() => await _connection.DisposeAsync();
 
         [SkipOnCI]
+        public async Task ShouldThrowWhenDatabaseEmpty()
+        {
+            var exception = await Should.ThrowAsync<InvalidOperationException>(Respawner.CreateAsync(_connection));
+
+            exception.Message.ShouldContain("No tables found");
+        }
+
+        [SkipOnCI]
         public async Task ShouldDeleteData()
         {
             await using var command = new DB2Command("DROP TABLE IF EXISTS Foo; CREATE TABLE Foo (Value INT);", _connection);

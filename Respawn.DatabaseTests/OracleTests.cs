@@ -11,6 +11,19 @@ namespace Respawn.DatabaseTests
     public class OracleTests(ITestOutputHelper output, OracleFixture fixture) : IClassFixture<OracleFixture>
     {
         [SkipOnCI]
+        public async Task ShouldThrowWhenDatabaseEmpty()
+        {
+            using var db = await fixture.CreateDatabaseAsync();
+
+            var exception = await Should.ThrowAsync<InvalidOperationException>(Respawner.CreateAsync(db.Connection, new RespawnerOptions
+            {
+                SchemasToInclude = new[] { fixture.User }
+            }));
+
+            exception.Message.ShouldContain("No tables found");
+        }
+
+        [SkipOnCI]
         public async Task ShouldDeleteData()
         {
             using var db = await fixture.CreateDatabaseAsync();

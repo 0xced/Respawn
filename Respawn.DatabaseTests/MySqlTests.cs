@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using Respawn.Graph;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,6 +18,19 @@ namespace Respawn.DatabaseTests
         public class Bar
         {
             public int Value { get; set; }
+        }
+
+        [Fact]
+        public async Task ShouldThrowWhenDatabaseEmpty()
+        {
+            using var db = await fixture.CreateDatabaseAsync();
+
+            var exception = await Should.ThrowAsync<InvalidOperationException>(Respawner.CreateAsync(db.Connection, new RespawnerOptions
+            {
+                SchemasToInclude = new[] { nameof(ShouldThrowWhenDatabaseEmpty) }
+            }));
+
+            exception.Message.ShouldContain("No tables found");
         }
 
         [Fact]
